@@ -8,6 +8,7 @@ import com.springboot.photoapp.api.users.PhotoAppApiUsers.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -16,10 +17,12 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -29,9 +32,9 @@ public class UserServiceImpl implements UserService {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
         User user = modelMapper.map(createUserRequestDto, User.class);
+        user.setPassword(bCryptPasswordEncoder.encode(createUserRequestDto.getPassword()));
         userRepository.save(user);
 
-        UserCreateResponseDto responseDto = modelMapper.map(user, UserCreateResponseDto.class);
-        return responseDto;
+        return modelMapper.map(user, UserCreateResponseDto.class);
     }
 }
