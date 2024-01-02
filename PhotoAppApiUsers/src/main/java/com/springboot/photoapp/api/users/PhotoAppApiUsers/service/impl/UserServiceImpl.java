@@ -1,7 +1,7 @@
 package com.springboot.photoapp.api.users.PhotoAppApiUsers.service.impl;
 
 import com.springboot.photoapp.api.users.PhotoAppApiUsers.dto.request.UserCreateRequestDto;
-import com.springboot.photoapp.api.users.PhotoAppApiUsers.dto.response.UserCreateResponseDto;
+import com.springboot.photoapp.api.users.PhotoAppApiUsers.dto.response.UserResponseDto;
 import com.springboot.photoapp.api.users.PhotoAppApiUsers.entity.UserEntity;
 import com.springboot.photoapp.api.users.PhotoAppApiUsers.repository.UserRepository;
 import com.springboot.photoapp.api.users.PhotoAppApiUsers.service.UserService;
@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserCreateResponseDto createUser(UserCreateRequestDto createUserRequestDto) {
+    public UserResponseDto createUser(UserCreateRequestDto createUserRequestDto) {
         createUserRequestDto.setUserId(UUID.randomUUID().toString());
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -39,7 +39,13 @@ public class UserServiceImpl implements UserService {
         userEntity.setPassword(bCryptPasswordEncoder.encode(createUserRequestDto.getPassword()));
         userRepository.save(userEntity);
 
-        return modelMapper.map(userEntity, UserCreateResponseDto.class);
+        return modelMapper.map(userEntity, UserResponseDto.class);
+    }
+
+    @Override
+    public UserResponseDto findByUserName(String email) {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(userRepository.findByEmail(email), UserResponseDto.class);
     }
 
     @Override

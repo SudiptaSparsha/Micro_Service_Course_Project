@@ -47,7 +47,7 @@ public class WebSecurity {
                 .access(new WebExpressionAuthorizationManager("hasIpAddress('"+environment.getProperty("gateway.ip-address")+"')"))
                 .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
                 .and()
-                .addFilter(new AuthenticationFilter(authenticationManager))
+                .addFilter(new AuthenticationFilter(authenticationManager, userService, environment))
                 .authenticationManager(authenticationManager)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

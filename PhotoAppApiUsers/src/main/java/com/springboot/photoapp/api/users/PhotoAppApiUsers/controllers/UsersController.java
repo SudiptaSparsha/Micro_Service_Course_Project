@@ -1,7 +1,7 @@
 package com.springboot.photoapp.api.users.PhotoAppApiUsers.controllers;
 
 import com.springboot.photoapp.api.users.PhotoAppApiUsers.dto.request.UserCreateRequestDto;
-import com.springboot.photoapp.api.users.PhotoAppApiUsers.dto.response.UserCreateResponseDto;
+import com.springboot.photoapp.api.users.PhotoAppApiUsers.dto.response.UserResponseDto;
 import com.springboot.photoapp.api.users.PhotoAppApiUsers.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +30,8 @@ public class UsersController {
     }
 
     @PostMapping
-    public ResponseEntity<UserCreateResponseDto> createUser(@Valid @RequestBody UserCreateRequestDto createUserRequestDto) {
-        UserCreateResponseDto responseDto = userService.createUser(createUserRequestDto);
+    public ResponseEntity<UserResponseDto> createUser(@Valid @RequestBody UserCreateRequestDto createUserRequestDto) {
+        UserResponseDto responseDto = userService.createUser(createUserRequestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }

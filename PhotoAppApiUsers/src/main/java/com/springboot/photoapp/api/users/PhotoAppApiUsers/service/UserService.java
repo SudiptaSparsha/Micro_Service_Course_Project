@@ -1,9 +1,10 @@
 package com.springboot.photoapp.api.users.PhotoAppApiUsers.service;
 
 import com.springboot.photoapp.api.users.PhotoAppApiUsers.dto.request.UserCreateRequestDto;
-import com.springboot.photoapp.api.users.PhotoAppApiUsers.dto.response.UserCreateResponseDto;
+import com.springboot.photoapp.api.users.PhotoAppApiUsers.dto.response.UserResponseDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
-    public UserCreateResponseDto createUser(UserCreateRequestDto createUserRequestDto);
+    UserResponseDto createUser(UserCreateRequestDto createUserRequestDto);
+    UserResponseDto findByUserName(String email);
 }
