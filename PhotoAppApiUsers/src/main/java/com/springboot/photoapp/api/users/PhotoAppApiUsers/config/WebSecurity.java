@@ -40,6 +40,10 @@ public class WebSecurity {
         authenticationManagerBuilder.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
         AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
+        AuthenticationFilter authenticationFilter =
+                new AuthenticationFilter(authenticationManager, userService, environment);
+        authenticationFilter.setFilterProcessesUrl(environment.getProperty("users.login.url"));
+
         http.csrf().disable();
 
         http.authorizeHttpRequests()
@@ -47,7 +51,7 @@ public class WebSecurity {
                 .access(new WebExpressionAuthorizationManager("hasIpAddress('"+environment.getProperty("gateway.ip-address")+"')"))
                 .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
                 .and()
-                .addFilter(new AuthenticationFilter(authenticationManager, userService, environment))
+                .addFilter(authenticationFilter)
                 .authenticationManager(authenticationManager)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
